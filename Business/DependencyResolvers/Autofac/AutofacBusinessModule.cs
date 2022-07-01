@@ -23,14 +23,15 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<UserRepository>().As<IUserRepository>();
-            builder.RegisterType<VerificationCodeManager>().As<IVerificationCodeService>();
-            builder.RegisterType<VerificationCodeRepository>().As<IVerificationCodeRepository>();
-            builder.RegisterType<MailTransactionManager>().As<IMailTransactionService>();
-            builder.RegisterType<MailTransactionRepository>().As<IMailTransactionRepository>();
+       
             builder.RegisterType<CategoryManager>().As<ICategoryService>();
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
-            builder.RegisterType<ProductManager>().As<IProductService>();
-            builder.RegisterType<ProductRepository>().As<IProductRepository>();
+
+            builder.RegisterType<TarifManager>().As<ITarifService>();
+            builder.RegisterType<TarifRepository>().As<ITarifRepository>();
+           
+          
+           
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assembly)
                 .AsImplementedInterfaces()

@@ -18,12 +18,5 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(e => e.Password).Equal(password => password.RePassword).WithMessage("Şifre ve tekrar şifresi eşit olmalıdır. ");
         }
     }
-    public class ResetPasswordValidator : AbstractValidator<UserForResetPasswordDto>
-    {
-        public ResetPasswordValidator()
-        {
-            RuleFor(e => e.Code).NotEmpty().NotNull();
-            RuleFor(e => e.Password).Equal(password => password.RePassword).WithMessage("Şifre ve tekrar şifresi eşit olmalıdır. ");
-        }
-    }
+   
 }

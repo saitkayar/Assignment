@@ -44,7 +44,7 @@ namespace Core.DataAccess.Concrete
             }
         }
 
-        public virtual List<TEntity> GetAll(Expression<Func<TEntity,bool>> filter = null)
+        public  virtual List<TEntity> GetAll(Expression<Func<TEntity,bool>> filter = null)
         {
             using (var context = new TContext())
             {

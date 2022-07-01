@@ -1,0 +1,225 @@
+﻿@using Entities.Concrete
+@{
+    ViewData["Title"] = "Tarifler";
+    Layout = "_Layout";
+}
+
+
+<header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 m-2 fst-italic fs-5 fw-bold ">
+                        <li class="nav-item" >
+                            <a class="nav-link " asp-area="" asp-controller="Tarifs" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="top" title="Anasayfa">Tarifler</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-primary" asp-area="" asp-controller="Categories" asp-action="Index"data-bs-toggle="tooltip" data-bs-placement="top" title="Kategoriler">Kategoriler</a>
+                        </li>
+                     <li class="nav-item">
+                            <a class="nav-link text-primary" asp-area="" asp-controller="YemekTarifler" asp-action="Tarifler"data-bs-toggle="tooltip" data-bs-placement="top" title="Kategoriler">Tarif Görüntüle</a>
+                        </li>
+                      
+                      
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+<div class="text-center mb-5">
+	<h1 class="display-4">Tarifler Bölümü</h1>
+
+</div>
+<a id="addVehicle" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#Add">
+	Yeni Tarif Ekle
+</a>
+<table class="table table-bordered table-hover " id="tblUser">
+	<thead>
+		<tr class="table-dark col-8">
+			<th scope="col">#</th>
+			<th scope="col">Title</th>
+			<th scope="col">CategoryName</th>
+			<th scope="col">ImagePath</th>
+			<th scope="col">Slug</th>
+	
+
+			<th scope="col">Aksiyon</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		@{
+			var i = 0;
+		}
+		@foreach (TarifDto item in @ViewBag.tarifs)
+		
+
+		{
+		
+			<tr>
+				<td>@(++i)</td>
+				<td>@item.Title</td>
+				<td>@item.CategoryName</td>
+				<td>@item.ImagePath</td>
+				<td>@item.Slug</td>
+		
+			
+				<td>
+					<a id="btnEdit" class="btn btn-primary edit" data-bs-toggle="modal" data-bs-target="#MyPopup" data-id="@item.Id">
+						Güncelle
+					</a>
+					<a id="btndelete" data-bs-toggle="modal" onclick="sendDelete(@item.Id)" data-bs-target="#sil" class="btn btn-danger" data-id="@item.Id">
+						Sil
+					</a>
+				</td>
+
+
+			</tr>
+		}
+
+
+	</tbody>
+
+</table>
+
+
+<div class="modal fade" id="sil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Silme İşlemi</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Silmek İstediğinize Emin misiniz?
+			</div>
+			<div class="modal-footer">
+				<form action="/Tarifs/Delete" method="post">
+					<button type="button" class="btn btn-success" data-bs-dismiss="modal">Hayır</button>
+					<input type="hidden" id="deleted" name="id" />
+					<button type="submit" class="btn btn-danger">Evet</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="Add" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="staticBackdropLabel">Tarif Ekleme Ekranı</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="addForm" method="post" action="/Tarifs/Add">
+					<div class="mb-3">
+						<label class="form-label">Başlık</label>
+						<input type="text" name="Title"  class="form-control">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Kategori</label>
+						<select name="CategoryId" class="form-select">
+							@foreach (Category item in @ViewBag.categories)
+							{
+								<option value="@item.Id">@item.Name</option>
+							}
+
+						</select>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Resim Yolu</label>
+						<input type="text" name="ImagePath"  class="form-control">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Slug</label>
+						<input type="number" name="Slug" class="form-control">
+					</div>
+
+					<button type="submit" class="btn btn-success  col-md-3" id="button">Ekle</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="MyPopup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="staticBackdropLabel">Tarif Bilgilerini Güncelle</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="addForm" method="post" action="/Tarifs/Update">
+					<div class="mb-3">
+						<label class="form-label">Başlık</label>
+						<input type="text" name="Title" id="title" class="form-control">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Kategori</label>
+						<select name="CategoryId" id="kategor"class="form-select">
+							@foreach (Category item in @ViewBag.categories)
+							{
+								<option value="@item.Id">@item.Name</option>
+							}
+
+						</select>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Resim Yolu</label>
+						<input type="text" name="ImagePath" id="ımage"  class="form-control">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Slug</label>
+						<input type="number" name="Slug" id="slug"class="form-control">
+					</div>
+					<input type="hidden" id="id" name="Id" />
+					<button type="submit" class="btn btn-success  col-md-3">Güncelle</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+				<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+	function sendDelete(id) {
+		console.log(id);
+		$("#deleted").val(id);
+	}
+	$(document).ready(function() {
+		$('table .edit').on('click', function() {
+			var id = $(this).data("id");
+            console.log(id);
+			//$("#MyPopup #id").val(id);
+			$.ajax({
+				type: 'Get',
+				url: "/Tarifs/Get/" + id,
+			
+				success: function(response) {
+				
+					console.log(response.data);
+
+					$("#MyPopup #id").val(response.data.id);
+					$('#title').attr('value', response.data.title);
+					$('#ımage').attr('value', response.data.imagePath);
+					$('#slug').attr('value', response.data.slug);
+					
+				}
+			});
+		});
+	});
+</script>

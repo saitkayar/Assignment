@@ -1,5 +1,4 @@
-﻿using Core.Abstract;
-using Core.Concrete;
+﻿
 using Core.CrossCuttingConcerns.Caching;
 using Core.CrossCuttingConcerns.Caching.Microsoft;
 using Core.Utilities.IoC;
@@ -21,8 +20,7 @@ namespace Core.DependencyResolvers
             services.AddMemoryCache();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
-            services.AddSingleton<IMailService, MailAdapter>();
-            services.AddSingleton<ICloudinaryService, CloudinaryAdapter>();
+       
             services.AddSingleton<Stopwatch>();
         }
     }

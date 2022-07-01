@@ -1,21 +1,15 @@
 ﻿using Business.Abstract;
 using Business.ValidationRules.FluentValidation;
-using Core.Abstract;
-using Core.Aspects.Autofac.Exception;
+
 using Core.Aspects.Autofac.Validation;
-using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
-using DataAccess.Abstract;
-using Entities.Concrete;
+
 using Entities.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Business.Concrete
 {
@@ -54,7 +48,7 @@ namespace Business.Concrete
             }
             return new SuccessDataResult<User>(checkUser.Data, "Kullacını girişi başarılı.");
         }
-        [ExceptionLogAspect(typeof(DatabaseLogger))]
+
         [ValidationAspect(typeof(RegisterValidator))]
         public IDataResult<User> Register(UserForRegisterDto userForRegisterDto)
         {
@@ -70,7 +64,7 @@ namespace Business.Concrete
                 FullName = userForRegisterDto.FullName,
                 UserName = userForRegisterDto.UserName,
                 Email= userForRegisterDto.Email,
-                Status = true,
+             
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
             };
@@ -79,20 +73,7 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(user, "Kayıt işlemi başarılı.");
 
         }
-        [ValidationAspect(typeof(ResetPasswordValidator))]
-        public IResult ResetPassword(UserForResetPasswordDto resetPasswordDto,int userId)
-        {
-            var user = _userService.Get(u=>u.Id==userId).Data;
-            if (user == null)
-            {
-                return new ErrorResult("Kullanıcı bulunamadı.");
-            }
-            byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(resetPasswordDto.Password, out passwordHash, out passwordSalt);
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            return this._userService.Update(user);
-        }
+       
         public IResult UserExists(string userName)
         {
             if (_userService.Get(u => u.UserName == userName).Data == null)
@@ -102,14 +83,6 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<User> UserVerification(UserForVerificationDto userForVerificationDto)
-        {
-            var disableUserExists = this._userService.Get(u => u.Id == userForVerificationDto.UserId && u.IsVerification == false);
-            if (disableUserExists.Data == null)
-            {
-                return new ErrorDataResult<User>("Pasif kullanıcı bulunamadı");
-            }
-            return disableUserExists;
-        }
+      
     }
 }
